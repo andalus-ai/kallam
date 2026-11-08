@@ -28,6 +28,7 @@ flowchart TD
 - `FollowUpResearchTask` is an executable, typed task. It identifies the specialist port, objective, query, retrieval depth, primary-source constraint and reason for the follow-up.
 - `ResearchCritique.followUpTasks` carries actionable work. `requiredResearch` remains human-readable explanatory text and is not parsed into executable tasks.
 - `ResearchRequirement` is supplied by the selected methodology/profile. The generic critic does not assume that every question requires both Qur'an and Hadith evidence.
+- `SimpleResearchPlanner` accepts an explicit initial task list. Its no-argument constructor retains the old four-specialist broad starter profile for compatibility only; production wiring should supply tasks selected for the case's versioned methodology and disciplines.
 - `ResearchPlan.ResearchTask` keeps task rationale and supports conversion from a typed follow-up.
 - `ResearchState.toolCalls` counts specialist invocations. Evidence volume is measured separately by `evidence().size()`; repeated evidence IDs are deduplicated.
 - The coordinator executes the initial plan once. Later rounds execute only the follow-up tasks emitted by the immediately preceding critique.

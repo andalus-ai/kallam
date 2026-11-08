@@ -8,6 +8,7 @@ Kallam is a scholarly research product for structured Fiqh research and Istinbā
 |---|---|
 | kallam-core | Framework-independent scholarly domain, research state, planning, analysis and reports |
 | kallam_ijtihad | Usul/methodology capabilities, expert contracts, evidence tiers and Tarjih |
+| kallam-hadith | Framework-independent Hadith domain, source-aware corpus contracts and discovery orchestration |
 | kallam-rag-integration | Andalus RAG adapter and evidence provenance translation |
 | kallam-andalus-integration | Andalus agent execution adapters for methodology experts |
 | kallam_api | Quarkus application, REST/WebSocket API, persistence and application wiring |

@@ -93,11 +93,18 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
                     "Andalus inference did not complete successfully (" + status + ").");
         }
 
-        int reportedReasoningTokens = reportedReasoningTokens(inference);
-        ResearchTokenUsage usage = usage(inference, Math.max(0, reportedReasoningTokens));
+        int reportedReasoningTokens;
+        ResearchTokenUsage usage;
+        try {
+            reportedReasoningTokens = reportedReasoningTokens(inference);
+            usage = usage(inference, Math.max(0, reportedReasoningTokens));
+        } catch (RuntimeException invalidUsage) {
+            return partial(methodology, ResearchTokenUsage.none(),
+                    "Andalus returned invalid provider token-usage metadata; output was rejected.");
+        }
         if (reportedReasoningTokens < 0) {
             return partial(methodology, usage,
-                    "Provider did not report reasoning-token usage; analysis is retained as unverified partial output.");
+                    "Provider did not report reasoning-token usage; model output was not accepted.");
         }
         if (reportedReasoningTokens > remainingReasoningTokens) {
             return partial(methodology, usage,

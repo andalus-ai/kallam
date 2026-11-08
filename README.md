@@ -22,7 +22,7 @@ Kallam is a scholarly research product for structured Fiqh research and Istinbā
 5. A scholar remains responsible for review and final determination.
 6. AI-generated analysis, published interpretation, primary-source material and scholar annotations must remain distinguishable.
 
-See docs/development/p0-build-foundation.md and docs/architecture/module-boundaries.md.
+See docs/development/p0-build-foundation.md and docs/architecture/module-boundaries.md. Hadith ingestion boundaries are documented in docs/hadith/h0-domain-foundation.md and docs/hadith/h1-corpus-ingestion.md.
 
 ## Build
 
@@ -38,7 +38,7 @@ To build the default application reactor (without the separately published Andal
 
 To build only the framework-independent domain and methodology modules:
 
-    mvn -pl kallam-core,kallam_ijtihad -am -B -ntp clean verify
+    mvn -pl kallam-core,kallam_ijtihad,kallam-hadith -am -B -ntp clean verify
 
 To include the external Andalus runtime adapters:
 

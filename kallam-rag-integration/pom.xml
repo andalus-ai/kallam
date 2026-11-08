@@ -6,7 +6,6 @@
   <description>Adapter from Andalus retrieval results to Kallam evidence</description>
   <dependencies>
     <dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-core</artifactId><version>${project.version}</version></dependency>
-    <dependency><groupId>tech.kayys.andalus</groupId><artifactId>andalus-rag-runtime</artifactId><version>${andalus.version}</version></dependency>
     <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency>
   </dependencies>
 </project>

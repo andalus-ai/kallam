@@ -10,11 +10,13 @@ public final class HadithImportService {
   Objects.requireNonNull(request,"request");
   List<HadithImportReport.Issue> issues=validate(request);
   if(!issues.isEmpty())return new HadithImportReport(request.batchId(),HadithImportReport.Status.REJECTED,request.occurrences().size(),0,issues);
-  if(store.hasImportedBatch(request.batchId(),request.sourceChecksum()))
-   return new HadithImportReport(request.batchId(),HadithImportReport.Status.ALREADY_IMPORTED,request.occurrences().size(),0,List.of());
-  boolean persisted=store.persistAtomically(request);
-  return new HadithImportReport(request.batchId(),persisted?HadithImportReport.Status.IMPORTED:HadithImportReport.Status.ALREADY_IMPORTED,
-   request.occurrences().size(),persisted?request.occurrences().size():0,List.of());
+  HadithImportStore.WriteResult result=store.persistAtomically(request);
+  if(result==HadithImportStore.WriteResult.CHECKSUM_CONFLICT)
+   return new HadithImportReport(request.batchId(),HadithImportReport.Status.REJECTED,request.occurrences().size(),0,
+    List.of(new HadithImportReport.Issue(null,"BATCH_CHECKSUM_CONFLICT","Batch ID already exists with a different source checksum.")));
+  boolean stored=result==HadithImportStore.WriteResult.STORED;
+  return new HadithImportReport(request.batchId(),stored?HadithImportReport.Status.IMPORTED:HadithImportReport.Status.ALREADY_IMPORTED,
+   request.occurrences().size(),stored?request.occurrences().size():0,List.of());
  }
  private List<HadithImportReport.Issue> validate(HadithImportRequest r){
   List<HadithImportReport.Issue> out=new ArrayList<>();

@@ -37,7 +37,7 @@ public final class IstinbatCoordinator {
         var state = new ResearchState(
                 request.caseId(), ResearchPhase.PLANNING, masalah,
                 List.of(), List.of(), List.of(), List.of(),
-                List.of(), List.of(), List.of(), null, 0, 0);
+                List.of(), List.of(), masalah.unresolvedFacts(), null, 0, 0);
 
         var plan = planner.plan(request);
         List<ResearchPlan.ResearchTask> pendingTasks = plan.tasks();

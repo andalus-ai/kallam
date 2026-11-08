@@ -173,7 +173,7 @@ class StructuredResearchAnalysisTest {
     }
 
     private static Evidence evidence(String id, EvidenceType type) {
-        return new Evidence(id, EvidenceType.FIQH, "source text", null,
+        return new Evidence(id, type, "source text", null,
                 new SourceReference(id, "Fiqh source", "Author", null,
                         null, null, null, "page 1", Map.of()),
                 EvidenceStatus.PRIMARY_SOURCE, 0.9, List.of(), List.of(),

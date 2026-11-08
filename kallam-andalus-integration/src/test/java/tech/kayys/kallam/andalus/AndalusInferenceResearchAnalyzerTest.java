@@ -157,6 +157,7 @@ class AndalusInferenceResearchAnalyzerTest {
     private static String validJson() {
         return """
                 {
+                  "schemaVersion":"kallam-research-analysis-v1",
                   "methodologyId":"shafii-research",
                   "methodologyVersion":"1.2.0",
                   "status":"COMPLETE",

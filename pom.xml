@@ -3,10 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>tech.kayys.kallam</groupId><artifactId>kallam-parent</artifactId><version>0.1.0-SNAPSHOT</version><packaging>pom</packaging>
   <name>Kallam</name><description>Scholarly research and Istinbat platform</description>
-  <modules>
-    <module>kallam-core</module><module>kallam_ijtihad</module>
-    <module>kallam-rag-integration</module><module>kallam-andalus-integration</module><module>kallam_api</module>
-  </modules>
+  <modules><module>kallam-core</module><module>kallam_ijtihad</module><module>kallam-rag-integration</module><module>kallam-andalus-integration</module><module>kallam_api</module></modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>25</maven.compiler.release>
@@ -17,15 +14,16 @@
     <junit.version>5.12.2</junit.version>
   </properties>
   <dependencyManagement><dependencies>
-    <dependency><groupId>io.quarkus.platform</groupId><artifactId>quarkus-bom</artifactId><version>\${quarkus.platform.version}</version><type>pom</type><scope>import</scope></dependency>
-    <dependency><groupId>org.junit</groupId><artifactId>junit-bom</artifactId><version>\${junit.version}</version><type>pom</type><scope>import</scope></dependency>
+    <dependency><groupId>io.quarkus.platform</groupId><artifactId>quarkus-bom</artifactId><version>${quarkus.platform.version}</version><type>pom</type><scope>import</scope></dependency>
+    <dependency><groupId>org.junit</groupId><artifactId>junit-bom</artifactId><version>${junit.version}</version><type>pom</type><scope>import</scope></dependency>
   </dependencies></dependencyManagement>
   <repositories>
+    <repository><id>central</id><url>https://repo.maven.apache.org/maven2</url></repository>
     <repository><id>github-andalus-framework</id><url>https://maven.pkg.github.com/andalus-ai/andalus-framework</url></repository>
     <repository><id>github-andalus-runtime</id><url>https://maven.pkg.github.com/andalus-ai/andalus</url></repository>
   </repositories>
   <build><pluginManagement><plugins>
-    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>\${maven.compiler.plugin.version}</version><configuration><release>\${maven.compiler.release}</release><parameters>true</parameters></configuration></plugin>
-    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>\${maven.surefire.plugin.version}</version><configuration><useModulePath>false</useModulePath></configuration></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>${maven.compiler.plugin.version}</version><configuration><release>${maven.compiler.release}</release><parameters>true</parameters></configuration></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>${maven.surefire.plugin.version}</version><configuration><useModulePath>false</useModulePath></configuration></plugin>
   </plugins></pluginManagement></build>
 </project>

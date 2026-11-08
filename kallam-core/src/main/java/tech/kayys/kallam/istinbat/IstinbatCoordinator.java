@@ -3,6 +3,7 @@ package tech.kayys.kallam.istinbat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public final class IstinbatCoordinator {
 
@@ -18,10 +19,10 @@ public final class IstinbatCoordinator {
             ResearchCritic critic,
             ResearchReportBuilder reportBuilder,
             List<ResearchSpecialist> specialists) {
-        this.planner = planner;
-        this.analyzer = analyzer;
-        this.critic = critic;
-        this.reportBuilder = reportBuilder;
+        this.planner = Objects.requireNonNull(planner, "planner");
+        this.analyzer = Objects.requireNonNull(analyzer, "analyzer");
+        this.critic = Objects.requireNonNull(critic, "critic");
+        this.reportBuilder = Objects.requireNonNull(reportBuilder, "reportBuilder");
         this.specialists = specialists.stream()
                 .collect(java.util.stream.Collectors.toUnmodifiableMap(
                         ResearchSpecialist::id, s -> s));
@@ -76,7 +77,20 @@ public final class IstinbatCoordinator {
                 state = state.addEvidence(bounded);
             }
 
-            state = analyzer.analyze(state);
+            int remainingReasoningTokens = plan.maxReasoningTokens() - state.reasoningTokensUsed();
+            if (remainingReasoningTokens > 0) {
+                var analysis = analyzer.analyze(state, request.methodology(), remainingReasoningTokens);
+                if (analysis == null) {
+                    state = state.addUnresolvedQuestion("Analysis adapter returned no structured result.");
+                } else {
+                    state = state.withAnalysisResult(
+                            analysis, request.methodology(), remainingReasoningTokens);
+                }
+            } else if (request.methodology().structuredAnalysisRequired()) {
+                state = state.addUnresolvedQuestion(
+                        "Structured analysis was not run because the reasoning-token budget is exhausted.");
+            }
+
             state = state.withCritique(critic.critique(state));
 
             if (state.critique().readyForScholarReview()) break;

@@ -93,6 +93,39 @@ class StructuredResearchAnalysisTest {
     }
 
     @Test
+    void coordinatorPassesOnlyRemainingReasoningTokenBudgetAcrossRounds() {
+        var methodology = new ResearchMethodology("shafii-research", "1.2.0",
+                "shafii", List.of("fiqh", "usul"), true);
+        var request = new ResearchRequest("case-2", "question", "en",
+                new ResearchRequest.ResearchBudget(3, 5, 60), methodology);
+        var plan = new ResearchPlan(List.of(
+                new ResearchPlan.ResearchTask("fiqh-first", "fiqh", "question", 5, false)),
+                3, 5, 60, 20, 10_000);
+        var requirements = List.of(new ResearchRequirement(
+                "hadith-required", EvidenceType.HADITH, "hadith",
+                "Verify hadith evidence", true));
+        var budgetsSeen = new java.util.ArrayList<Integer>();
+        ResearchAnalyzer analyzer = (current, selected, remaining) -> {
+            budgetsSeen.add(remaining);
+            return new ResearchAnalysisResult(selected.id(), selected.version(),
+                    ResearchAnalysisResult.Status.COMPLETE,
+                    List.of(), List.of(), List.of(), List.of(), List.of(),
+                    List.of(), List.of(),
+                    new ResearchTokenUsage(0, 0, Math.min(40, remaining)));
+        };
+        ResearchSpecialist fiqh = specialist("fiqh", EvidenceType.FIQH);
+        ResearchSpecialist hadith = specialist("hadith", EvidenceType.HADITH);
+        var coordinator = new IstinbatCoordinator(
+                ignored -> plan, analyzer, new BasicResearchCritic(requirements),
+                new DefaultResearchReportBuilder(), List.of(fiqh, hadith));
+
+        var report = coordinator.research(request);
+
+        assertEquals(List.of(60, 20), budgetsSeen);
+        assertTrue(report.critique().readyForScholarReview());
+    }
+
+    @Test
     void reportPreservesStructuredAnalysisAndStillRequiresScholarJudgment() {
         var state = state(List.of(evidence("ev-1")));
         var claim = new Claim("claim-1", "A legal proposition", false, false);
@@ -125,7 +158,21 @@ class StructuredResearchAnalysisTest {
                 List.of(), List.of(), null, 1, 0);
     }
 
+    private static ResearchSpecialist specialist(String id, EvidenceType type) {
+        return new ResearchSpecialist() {
+            @Override public String id() { return id; }
+            @Override public List<Evidence> research(
+                    ResearchRequest request, ResearchState state, ResearchPlan.ResearchTask task) {
+                return List.of(evidence(id + "-evidence", type));
+            }
+        };
+    }
+
     private static Evidence evidence(String id) {
+        return evidence(id, EvidenceType.FIQH);
+    }
+
+    private static Evidence evidence(String id, EvidenceType type) {
         return new Evidence(id, EvidenceType.FIQH, "source text", null,
                 new SourceReference(id, "Fiqh source", "Author", null,
                         null, null, null, "page 1", Map.of()),

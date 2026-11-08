@@ -55,7 +55,7 @@ public final class InMemoryHadithSearchIndex implements HadithSearch {
 
     private HadithSearchHit score(IndexedOccurrence d, HadithSearchQuery query,
                                   String normalizedQuery, Set<String> queryTokens) {
-        boolean exact = d.originalMatn().equals(query.text()) || d.originalIsnad().equals(query.text());
+        boolean exact = Objects.equals(d.originalMatn(), query.text()) || Objects.equals(d.originalIsnad(), query.text());
         boolean normalized = d.normalizedMatn().equals(normalizedQuery)
                 || d.normalizedIsnad().equals(normalizedQuery);
         Set<String> docTokens = tokens(d.normalizedMatn() + " " + d.normalizedIsnad());

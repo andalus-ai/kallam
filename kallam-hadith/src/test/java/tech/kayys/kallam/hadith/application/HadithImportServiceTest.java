@@ -32,7 +32,7 @@ class HadithImportServiceTest {
  @Test void treatsSameBatchChecksumAsIdempotent(){
   MemoryStore store=new MemoryStore(); store.next=HadithImportStore.WriteResult.ALREADY_PRESENT;
   HadithImportReport report=new HadithImportService(store).importBatch(request(List.of(occurrence("o-1",editionId,collectionId,"batch-1"))));
-  assertEquals(HadithImportReport.Status.ALREADY_IMPORTED,report.status()); assertEquals(0,store.persistCalls);
+  assertEquals(HadithImportReport.Status.ALREADY_IMPORTED,report.status()); assertEquals(1,store.persistCalls);
  }
  private HadithImportRequest request(List<HadithOccurrence> occurrences){
   HadithCollection c=new HadithCollection(collectionId,"Sahih al-Bukhari","Muhammad al-Bukhari","ar");
@@ -44,8 +44,7 @@ class HadithImportServiceTest {
    "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ","حدثنا ...","ar","book=1/page=1",batch);
  }
  private static final class MemoryStore implements HadithImportStore {
-  boolean imported; int persistCalls; HadithImportRequest last;
-  public boolean hasImportedBatch(String id,String checksum){return imported;}
-  public boolean persistAtomically(HadithImportRequest r){persistCalls++;last=r;imported=true;return true;}
+  int persistCalls; HadithImportRequest last; WriteResult next=WriteResult.STORED;
+  public WriteResult persistAtomically(HadithImportRequest r){persistCalls++;last=r;return next;}
  }
 }

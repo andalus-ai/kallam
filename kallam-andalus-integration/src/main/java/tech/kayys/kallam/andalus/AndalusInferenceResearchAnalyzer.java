@@ -40,7 +40,7 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
     public static final String SCHEMA_VERSION = "kallam-research-analysis-v1";
     private static final int MAX_INPUT_TOKENS = 8192;
     private static final Set<String> ROOT_FIELDS = Set.of(
-            "methodologyId", "methodologyVersion", "status", "claims", "arguments",
+            "schemaVersion", "methodologyId", "methodologyVersion", "status", "claims", "arguments",
             "conflicts", "positions", "usulFindings", "unresolvedQuestions", "uncertaintyNotes");
 
     private final InferenceRuntime runtime;
@@ -197,6 +197,10 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
         requireObject(root, "root");
         rejectUnknown(root, ROOT_FIELDS, "root");
 
+        String schemaVersion = requiredText(root, "schemaVersion");
+        if (!SCHEMA_VERSION.equals(schemaVersion)) {
+            throw new IllegalArgumentException("unsupported analysis schema version: " + schemaVersion);
+        }
         String methodologyId = requiredText(root, "methodologyId");
         String methodologyVersion = requiredText(root, "methodologyVersion");
         if (!methodology.id().equals(methodologyId)
@@ -281,6 +285,7 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
     private static String schemaDescription() {
         return """
                 {
+                  "schemaVersion":"kallam-research-analysis-v1",
                   "methodologyId":"string",
                   "methodologyVersion":"string",
                   "status":"COMPLETE|PARTIAL",

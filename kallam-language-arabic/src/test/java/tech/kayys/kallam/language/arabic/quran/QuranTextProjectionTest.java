@@ -27,6 +27,16 @@ class QuranTextProjectionTest {
                 UnicodeNormalizationPolicy.SEARCH_PROFILE_DEFINED,
                 List.of(new TextAlignmentSegment(new CodePointRange(0, 3), new CodePointRange(0, 1)))));
     }
+    @Test void rejectsGapsInDerivedAlignment() {
+        var source = new QuranTextRepresentation("source-1", "abc", TextRepresentationKind.SOURCE_TRANSCRIPTION,
+                "ARABIC_QURANIC", null, null);
+        var derived = new QuranTextRepresentation("search-1", "abc", TextRepresentationKind.SEARCH_NORMALIZED,
+                "ARABIC_SEARCH", "search-v1", "source-1");
+        assertThrows(IllegalArgumentException.class, () -> new QuranTextProjection("search-v1", source, derived,
+                UnicodeNormalizationPolicy.PRESERVE_CODE_POINTS,
+                List.of(new TextAlignmentSegment(new CodePointRange(0, 1), new CodePointRange(0, 1)),
+                        new TextAlignmentSegment(new CodePointRange(2, 3), new CodePointRange(2, 3)))));
+    }
     @Test void codePointRangeDoesNotUseUtf16Offsets() {
         String text = "𞸀ب";
         assertEquals(2, text.codePointCount(0, text.length()));

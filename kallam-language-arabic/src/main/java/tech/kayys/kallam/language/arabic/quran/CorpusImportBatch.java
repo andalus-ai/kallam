@@ -1,5 +1,6 @@
 package tech.kayys.kallam.language.arabic.quran;
 import java.time.Instant;
+import java.util.Locale;
 import java.util.Objects;
 /** Immutable provenance for one imported source artifact or release batch. */
 public record CorpusImportBatch(String batchId, CorpusSourceId sourceId, String artifactSha256,
@@ -8,7 +9,7 @@ public record CorpusImportBatch(String batchId, CorpusSourceId sourceId, String 
     public CorpusImportBatch {
         batchId = required(batchId, "batchId");
         Objects.requireNonNull(sourceId, "sourceId");
-        artifactSha256 = required(artifactSha256, "artifactSha256").toLowerCase();
+        artifactSha256 = required(artifactSha256, "artifactSha256").toLowerCase(Locale.ROOT);
         if (!artifactSha256.matches("[0-9a-f]{64}"))
             throw new IllegalArgumentException("artifactSha256 must be a 64-character SHA-256 hex digest");
         if (recordCount < 0) throw new IllegalArgumentException("recordCount must not be negative");

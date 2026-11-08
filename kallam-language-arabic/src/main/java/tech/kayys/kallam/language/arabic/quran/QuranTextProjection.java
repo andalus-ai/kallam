@@ -23,15 +23,17 @@ public record QuranTextProjection(String projectionId, QuranTextRepresentation s
         if (!source.representationId().equals(derived.sourceRepresentationId()))
             throw new IllegalArgumentException("derived representation must refer to the source representation identifier");
         if (alignment.isEmpty()) throw new IllegalArgumentException("alignment must not be empty");
-        int previousSourceEnd = -1, previousDerivedEnd = -1;
+        int previousSourceEnd = -1, previousDerivedEnd = 0;
         for (TextAlignmentSegment segment : alignment) {
             if (!segment.sourceRange().fits(source.text())) throw new IllegalArgumentException("source alignment range exceeds source text");
             if (!segment.derivedRange().fits(derived.text())) throw new IllegalArgumentException("derived alignment range exceeds derived text");
             if (segment.sourceRange().startInclusive() < previousSourceEnd
-                    || segment.derivedRange().startInclusive() < previousDerivedEnd)
-                throw new IllegalArgumentException("alignment segments must be monotonic and non-overlapping");
+                    || segment.derivedRange().startInclusive() != previousDerivedEnd)
+                throw new IllegalArgumentException("alignment must be source-monotonic and cover every derived code point");
             previousSourceEnd = segment.sourceRange().endExclusive();
             previousDerivedEnd = segment.derivedRange().endExclusive();
         }
+        if (previousDerivedEnd != derived.text().codePointCount(0, derived.text().length()))
+            throw new IllegalArgumentException("alignment must cover the complete derived text");
     }
 }

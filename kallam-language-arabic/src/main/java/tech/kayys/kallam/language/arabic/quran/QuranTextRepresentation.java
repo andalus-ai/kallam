@@ -13,13 +13,13 @@ public record QuranTextRepresentation(String representationId, String text, Text
         if (kind == TextRepresentationKind.SOURCE_TRANSCRIPTION
                 && (transformationId != null || sourceRepresentationId != null))
             throw new IllegalArgumentException("source transcription cannot derive from another representation");
+        if (kind == TextRepresentationKind.UTHMANI_ORTHOGRAPHY
+                && ((transformationId == null) != (sourceRepresentationId == null)))
+            throw new IllegalArgumentException("derived Uthmani representation must identify both transformation and source");
         if (kind != TextRepresentationKind.SOURCE_TRANSCRIPTION
                 && kind != TextRepresentationKind.UTHMANI_ORTHOGRAPHY
                 && (transformationId == null || sourceRepresentationId == null))
             throw new IllegalArgumentException("derived representation must identify its transformation and source");
-        if (kind == TextRepresentationKind.UTHMANI_ORTHOGRAPHY && sourceRepresentationId != null
-                && transformationId == null)
-            throw new IllegalArgumentException("derived Uthmani representation must identify its transformation");
     }
     private static String required(String v, String f) {
         if (v == null || v.isBlank()) throw new IllegalArgumentException(f + " must not be blank");

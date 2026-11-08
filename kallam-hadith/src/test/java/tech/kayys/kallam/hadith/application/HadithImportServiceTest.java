@@ -23,8 +23,14 @@ class HadithImportServiceTest {
   assertEquals(HadithImportReport.Status.REJECTED,report.status());
   assertTrue(report.issues().stream().anyMatch(i->i.code().equals("DUPLICATE_OCCURRENCE_ID")));
  }
+ @Test void rejectsBatchIdReusedWithDifferentChecksum(){
+  MemoryStore store=new MemoryStore(); store.next=HadithImportStore.WriteResult.CHECKSUM_CONFLICT;
+  HadithImportReport report=new HadithImportService(store).importBatch(request(List.of(occurrence("o-1",editionId,collectionId,"batch-1"))));
+  assertEquals(HadithImportReport.Status.REJECTED,report.status());
+  assertTrue(report.issues().stream().anyMatch(i->i.code().equals("BATCH_CHECKSUM_CONFLICT")));
+ }
  @Test void treatsSameBatchChecksumAsIdempotent(){
-  MemoryStore store=new MemoryStore(); store.imported=true;
+  MemoryStore store=new MemoryStore(); store.next=HadithImportStore.WriteResult.ALREADY_PRESENT;
   HadithImportReport report=new HadithImportService(store).importBatch(request(List.of(occurrence("o-1",editionId,collectionId,"batch-1"))));
   assertEquals(HadithImportReport.Status.ALREADY_IMPORTED,report.status()); assertEquals(0,store.persistCalls);
  }

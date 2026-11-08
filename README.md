@@ -22,7 +22,7 @@ Kallam is a scholarly research product for structured Fiqh research and Istinbā
 5. A scholar remains responsible for review and final determination.
 6. AI-generated analysis, published interpretation, primary-source material and scholar annotations must remain distinguishable.
 
-See docs/development/p0-build-foundation.md and docs/architecture/module-boundaries.md. Hadith ingestion boundaries are documented in docs/hadith/h0-domain-foundation.md and docs/hadith/h1-corpus-ingestion.md.
+See docs/development/p0-build-foundation.md and docs/architecture/module-boundaries.md. Hadith boundaries are documented in docs/hadith/h0-domain-foundation.md, docs/hadith/h1-corpus-ingestion.md and docs/hadith/h2-search-index.md.
 
 ## Build
 

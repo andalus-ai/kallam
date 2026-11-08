@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>tech.kayys.kallam</groupId><artifactId>kallam-parent</artifactId><version>0.1.0-SNAPSHOT</version><packaging>pom</packaging>
   <name>Kallam</name><description>Scholarly research and Istinbat platform</description>
-  <modules><module>kallam-core</module><module>kallam_ijtihad</module><module>kallam-rag-integration</module><module>kallam_api</module></modules>
+  <modules><module>kallam-core</module><module>kallam_ijtihad</module><module>kallam-hadith</module><module>kallam-rag-integration</module><module>kallam_api</module></modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>25</maven.compiler.release>

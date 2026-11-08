@@ -96,7 +96,6 @@ public record ResearchState(
 
         var unresolved = new ArrayList<>(unresolvedQuestions);
         unresolved.addAll(result.unresolvedQuestions());
-        unresolved.addAll(result.uncertaintyNotes());
         if (methodology.structuredAnalysisRequired()
                 && result.status() != ResearchAnalysisResult.Status.COMPLETE) {
             unresolved.add("Structured analysis required by methodology "

@@ -13,7 +13,7 @@ HadithImportService rejects the complete batch before persistence when the editi
 
 HadithImportStore.persistAtomically is a transaction contract: batch identity, collection/edition metadata and all occurrences are committed together or not at all. Production adapters must enforce uniqueness under concurrent imports. The pre-check is only an optimization, not a concurrency guarantee.
 
-A repeated batch with the same ID and checksum is ALREADY_IMPORTED. A production adapter must reject reuse of a batch ID with a different checksum as a conflict; the initial port leaves conflict representation to adapter hardening.
+A repeated batch with the same ID and checksum is ALREADY_IMPORTED. Reuse of a batch ID with a different checksum is rejected as BATCH_CHECKSUM_CONFLICT. The store returns these outcomes from the same atomic write operation, so concurrent writers cannot turn the pre-check into a race condition.
 
 ## Provenance policy
 - Unknown publisher, license, publication year or bibliographic detail remains unknown; no metadata is inferred.

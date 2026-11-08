@@ -58,9 +58,10 @@ public record ResearchState(
     }
 
     public ResearchState withCritique(ResearchCritique value) {
+        // Critique requirements are not factual unknowns. Keep the two concepts separate.
         return new ResearchState(caseId, ResearchPhase.CRITIQUE, masalah, claims, evidence,
                 positions, usulFindings, argumentsFor, argumentsAgainst,
-                value.requiredResearch(), value, round, toolCalls);
+                unresolvedQuestions, value, round, toolCalls);
     }
 
     public ResearchState nextRound() {

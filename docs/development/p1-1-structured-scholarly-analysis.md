@@ -74,6 +74,7 @@ classDiagram
 - Argument origin is explicit: model inference, scholar annotation, or deterministic rule.
 - Arguments and conflicts surface reasoning and tensions; they do not perform automatic tarjih or resolve scholarly disagreement.
 - Confidence is a declared assessment, not a probability guarantee or proof of correctness.
+- Uncertainty notes are retained as uncertainty annotations and are not silently converted into factual unresolved questions.
 - Token usage is provider-reported. The coordinator passes the remaining reasoning-token budget and rejects results that exceed it. No text-length token estimates are used.
 - The safe default analyzer returns `NOT_CONFIGURED` with no invented claims or arguments.
 - A methodology that requires structured analysis cannot be marked ready for scholar review while the analyzer is unconfigured or incomplete.

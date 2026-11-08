@@ -42,3 +42,7 @@ The Quarkus API is in kallam_api. Its datasource and CORS settings are configure
 ## Scholarly safety
 
 Kallam is research assistance, not a mufti or an autonomous issuer of fatwas. Outputs must carry source provenance, epistemic status, methodology context, uncertainty and scholar-review state. Do not silently merge madhhab assumptions or present AI inference as a primary source.
+
+## Continuous integration
+
+The Build workflow runs the complete Maven reactor on pushes and pull requests. It uses the repository's GitHub token as a fallback for package reads; if the Andalus packages are private and that token is not granted access, configure GH_PACKAGES_READ_TOKEN in repository Actions secrets.

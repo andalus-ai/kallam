@@ -1,12 +1,23 @@
 package tech.kayys.kallam.istinbat;
 
+import java.util.List;
+
+/**
+ * Safe default when no model-backed analysis adapter is configured.
+ * It deliberately does not invent claims, arguments, or scholarly positions.
+ */
 public final class DefaultResearchAnalyzer implements ResearchAnalyzer {
 
     @Override
-    public ResearchState analyze(ResearchState state) {
-        // Deliberately conservative v0.1:
-        // analysis is represented as structured state and is expected
-        // to be supplied by a reasoning model in the runtime adapter.
-        return state.withPhase(ResearchPhase.ANALYSIS);
+    public ResearchAnalysisResult analyze(
+            ResearchState state,
+            ResearchMethodology methodology,
+            int remainingReasoningTokens) {
+        return new ResearchAnalysisResult(
+                methodology.id(),
+                methodology.version(),
+                ResearchAnalysisResult.Status.NOT_CONFIGURED,
+                List.of(), List.of(), List.of(), List.of(), List.of(),
+                List.of(), List.of(), ResearchTokenUsage.none());
     }
 }

@@ -138,7 +138,7 @@ class StructuredResearchAnalysisTest {
         assertEquals(result, report.structuredAnalysis());
         assertEquals(List.of("A legal proposition"), report.analysis());
         assertTrue(report.requiresScholarJudgment());
-        assertTrue(report.preliminarySynthesis().contains("not a ruling"));
+        assertTrue(report.preliminarySynthesis().contains("no definitive conclusion"));
     }
 
     private static ResearchAnalysisResult result(

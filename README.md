@@ -33,9 +33,15 @@ Andalus artifacts are resolved from GitHub Packages. Configure a GitHub token wi
     export GH_PACKAGES_READ_TOKEN="<read-packages-token>"
     mvn -s .mvn/settings.xml -B -ntp clean verify
 
+To build the default application reactor (without the separately published Andalus runtime adapters), use the command above. The optional Andalus runtime adapter profile is activated explicitly with -Pandalus-runtime; it requires the Andalus runtime artifacts to be published and accessible in GitHub Packages.
+
 To build only the framework-independent domain and methodology modules:
 
     mvn -pl kallam-core,kallam_ijtihad -am -B -ntp clean verify
+
+To include the external Andalus runtime adapters:
+
+    mvn -Pandalus-runtime -s .mvn/settings.xml -B -ntp clean verify
 
 The Quarkus API is in kallam_api. Its datasource and CORS settings are configured through environment variables; see kallam_api/src/main/resources/application.properties.
 

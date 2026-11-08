@@ -9,7 +9,7 @@ Establish one reproducible Maven reactor while preserving Kallam's scholarly dom
 - Canonical Maven coordinates: tech.kayys.kallam.
 - Reactor version: 0.1.0-SNAPSHOT.
 - Build baseline: Java 25, Maven 3.9.9+, Quarkus 3.32.2.
-- Andalus artifacts are consumed from the separate andalus-framework and andalus repositories at version 0.0.1.
+- Andalus runtime adapters are isolated behind the optional andalus-runtime Maven profile and consume artifacts from the separate andalus-framework and andalus repositories at version 0.0.1. The default reactor remains buildable without those separately published runtime artifacts.
 - kallam-core is a plain Java library.
 - Andalus agent adapters are isolated in kallam-andalus-integration; RAG adapters are isolated in kallam-rag-integration.
 - The API assembles modules but does not move research policy into Quarkus.
@@ -34,15 +34,19 @@ flowchart TD
   AND -. uses .-> ARUNTIME[Andalus Runtime]
 ~~~
 
+## Optional Andalus runtime profile
+
+Use -Pandalus-runtime to include the Andalus agent and RAG runtime adapter module. This profile is intentionally separate because the current Andalus runtime repository does not publish all required artifacts to GitHub Packages yet. The default Kallam domain/API reactor does not require those artifacts.
+
 ## Package access
 
 The two Andalus package repositories require GitHub Packages credentials. .mvn/settings.xml reads credentials from environment variables and contains no token. CI must provide GH_PACKAGES_READ_TOKEN with read access to both package repositories.
 
 ## Verification
 
-The acceptance command is:
+The default acceptance command is:
 
-    mvn -s .mvn/settings.xml -B -ntp clean verify
+    mvn -B -ntp clean verify
 
 The build should be executed in a JDK 25 environment with package access. A successful XML edit or successful GitHub commit is not evidence that the full reactor compiles. Record the exact Maven result in the pull request before merging.
 

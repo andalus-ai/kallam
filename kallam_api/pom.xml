@@ -8,7 +8,7 @@
     <dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-core</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-ijtihad</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-rag-integration</artifactId><version>${project.version}</version></dependency>
-    <dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-andalus-integration</artifactId><version>${project.version}</version></dependency>
+    
     <dependency><groupId>io.quarkus</groupId><artifactId>quarkus-rest-jackson</artifactId></dependency>
     <dependency><groupId>io.quarkus</groupId><artifactId>quarkus-websockets-next</artifactId></dependency>
     <dependency><groupId>io.quarkus</groupId><artifactId>quarkus-hibernate-orm-panache</artifactId></dependency>
@@ -20,4 +20,5 @@
     <dependency><groupId>io.rest-assured</groupId><artifactId>rest-assured</artifactId><scope>test</scope></dependency>
   </dependencies>
   <build><plugins><plugin><groupId>io.quarkus</groupId><artifactId>quarkus-maven-plugin</artifactId><version>${quarkus.platform.version}</version><extensions>true</extensions><executions><execution><goals><goal>build</goal></goals></execution></executions></plugin></plugins></build>
+  <profiles><profile><id>andalus-runtime</id><dependencies><dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-andalus-integration</artifactId><version>${project.version}</version></dependency></dependencies></profile></profiles>
 </project>

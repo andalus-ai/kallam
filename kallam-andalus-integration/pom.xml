@@ -8,5 +8,6 @@
     <dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-ijtihad</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>tech.kayys.andalus</groupId><artifactId>andalus-runtime-core</artifactId><version>${andalus.version}</version></dependency>
     <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency>
+      <dependency><groupId>tech.kayys.andalus</groupId><artifactId>andalus-rag-runtime</artifactId><version>${andalus.version}</version></dependency>
   </dependencies>
 </project>

@@ -8,7 +8,7 @@ Kallam is a scholarly research product for structured Fiqh research and Istinbā
 |---|---|
 | kallam-core | Framework-independent scholarly domain, research state, planning, analysis and reports |
 | kallam_ijtihad | Usul/methodology capabilities, expert contracts, evidence tiers and Tarjih |
-| kallam-hadith | Framework-independent Hadith domain, source-aware corpus contracts and discovery orchestration |
+| kallam-hadith | Framework-independent Hadith domain, validated corpus ingestion, source-aware Arabic search and discovery orchestration |
 | kallam-rag-integration | Andalus RAG adapter and evidence provenance translation |
 | kallam-andalus-integration | Andalus agent execution adapters for methodology experts |
 | kallam_api | Quarkus application, REST/WebSocket API, persistence and application wiring |
@@ -22,7 +22,7 @@ Kallam is a scholarly research product for structured Fiqh research and Istinbā
 5. A scholar remains responsible for review and final determination.
 6. AI-generated analysis, published interpretation, primary-source material and scholar annotations must remain distinguishable.
 
-See docs/development/p0-build-foundation.md and docs/architecture/module-boundaries.md. Hadith ingestion boundaries are documented in docs/hadith/h0-domain-foundation.md and docs/hadith/h1-corpus-ingestion.md.
+See docs/development/p0-build-foundation.md and docs/architecture/module-boundaries.md. Hadith boundaries are documented in docs/hadith/h0-domain-foundation.md, docs/hadith/h1-corpus-ingestion.md and docs/hadith/h2-search-index.md.
 
 ## Build
 

@@ -9,6 +9,7 @@ Kallam is a scholarly research product for structured Fiqh research and Istinbā
 | kallam-core | Framework-independent scholarly domain, research state, planning, analysis and reports |
 | kallam_ijtihad | Usul/methodology capabilities, expert contracts, evidence tiers and Tarjih |
 | kallam-hadith | Framework-independent Hadith domain, source-aware corpus contracts and discovery orchestration |
+| kallam-language-arabic | Provider-independent Arabic language and Qur'anic text domain contracts |
 | kallam-rag-integration | Andalus RAG adapter and evidence provenance translation |
 | kallam-andalus-integration | Andalus agent execution adapters for methodology experts |
 | kallam_api | Quarkus application, REST/WebSocket API, persistence and application wiring |
@@ -21,8 +22,10 @@ Kallam is a scholarly research product for structured Fiqh research and Istinbā
 4. Retrieval metadata must not be promoted to verified provenance without independent validation.
 5. A scholar remains responsible for review and final determination.
 6. AI-generated analysis, published interpretation, primary-source material and scholar annotations must remain distinguishable.
+7. Arabic source text is immutable; normalized search/display text is a separately identified projection.
+8. Qur'anic edition, orthographic representation and reading identity must not be conflated.
 
-See docs/development/p0-build-foundation.md and docs/architecture/module-boundaries.md. Hadith ingestion boundaries are documented in docs/hadith/h0-domain-foundation.md and docs/hadith/h1-corpus-ingestion.md.
+See docs/development/p0-build-foundation.md, docs/architecture/module-boundaries.md, docs/development/qa0-qa1-quranic-text-foundation.md and docs/development/qa1-qa2-source-registry-unicode-alignment.md. Hadith ingestion boundaries are documented in docs/hadith/h0-domain-foundation.md and docs/hadith/h1-corpus-ingestion.md.
 
 ## Build
 
@@ -38,7 +41,7 @@ To build the default application reactor (without the separately published Andal
 
 To build only the framework-independent domain and methodology modules:
 
-    mvn -pl kallam-core,kallam_ijtihad,kallam-hadith -am -B -ntp clean verify
+    mvn -pl kallam-core,kallam_ijtihad,kallam-hadith,kallam-language-arabic -am -B -ntp clean verify
 
 To include the external Andalus runtime adapters:
 

@@ -2,69 +2,38 @@
 
 ## Objective
 
-Establish a provider-independent, edition-aware foundation for Qur'anic text before implementing morphology, syntax, I'rab, semantics, Balaghah or Qira'at comparison.
+Establish a provider-independent, edition-aware foundation for Qur'anic text before implementing corpus adapters, annotation services or scholarly interpretation workflows.
 
-This milestone defines domain contracts and source-preservation rules. It does not claim to ship a complete Qur'anic corpus or a validated Qira'at database.
+These contracts live in the independent kallam-quran module under tech.kayys.kallam.quran. The kallam-language-arabic module owns general Arabic language and linguistic capabilities. Neither module requires the other merely to represent its own domain.
 
 ## Scope
 
-- Canonical surah/ayah coordinates.
-- Edition-specific text identity.
-- Explicit text representation kinds.
-- Immutable source transcription.
+- Canonical surah/ayah coordinates and edition identity.
+- Explicit text representation kinds and immutable source transcription.
 - Provenance for derived representations.
-- A read port for source-attested verse text.
-- Domain validation tests.
-
-## Identity boundaries
-
-A `VerseReference` identifies canonical coordinates (surah and ayah). It is not a substitute for an edition identifier or a source locator.
-
-An `EditionId` identifies a particular digital or published text edition. Different editions and data releases must remain distinguishable.
+- A provider-neutral read port for verse text.
+- Qira'at, riwayah and optional tariq identity contracts.
 
 ## Representation policy
 
-The model distinguishes:
+The model distinguishes SOURCE_TRANSCRIPTION, UTHMANI_ORTHOGRAPHY, READING_SPECIFIC, DISPLAY, SEARCH_NORMALIZED and ANALYSIS. Derived values identify their source representation and transformation. Search normalization never overwrites source text.
 
-- `SOURCE_TRANSCRIPTION`: exact imported source transcription.
-- `UTHMANI_ORTHOGRAPHY`: a representation explicitly identified as Uthmani orthography.
-- `READING_SPECIFIC`: text associated with a particular reading/transmission.
-- `DISPLAY`: presentation-oriented text.
-- `SEARCH_NORMALIZED`: derived search projection.
-- `ANALYSIS`: derived analytical representation.
-
-Derived values must identify the representation from which they were produced. Search normalization must never overwrite source text. A text value must not be relabeled as Uthmani or reading-specific without source metadata establishing that claim.
-
-## Qira'at boundary
-
-This milestone does not infer Qira'at from spelling, model output or normalized text. A later milestone must introduce a curated reading/transmission registry and explicit links from reading-specific text to its verified source and scholarly metadata.
+Qira'at is not inferred from spelling, model output or normalized text. Reading paths preserve Qira'at, riwayah and optional tariq as distinct identities, and verse-level variants require explicit source attestations.
 
 ## Source and licensing requirements
 
-Every corpus import must record, where available:
+Corpus imports record provider, edition/release, stable source locator, declared license and redistribution constraints, import batch, transformation history, verification status and reviewer attribution where available. No Qur'anic dataset is bundled or declared verified by this foundation.
 
-- Source work or provider.
-- Edition and release/version.
-- Stable source locator.
-- License and redistribution constraints.
-- Import batch and transformation history.
-- Verification status and reviewer attribution.
-
-No Qur'anic text dataset is bundled by this change. A future corpus integration must undergo source, edition, orthography, licensing and expert validation before being treated as verified.
-
-## Architecture
-
-```mermaid
+\`\`\`mermaid
 flowchart TD
-  CORPUS[Edition-aware Qur'an corpus]
-  REF[Canonical verse reference]
-  SOURCE[Immutable source transcription]
-  UTH[Verified Uthmani representation]
-  READ[Reading-specific representation]
-  DISPLAY[Display projection]
-  SEARCH[Search-normalized projection]
-  ANALYSIS[Analysis projection]
-
+  CORPUS["Edition-aware Qur'an corpus"]
+  REF["Canonical verse reference"]
+  SOURCE["Immutable source transcription"]
+  UTH["Uthmani representation"]
+  READ["Reading-specific representation"]
+  DISPLAY["Display projection"]
+  SEARCH["Search-normalized projection"]
+  ANALYSIS["Analysis projection"]
   CORPUS --> REF
   REF --> SOURCE
   SOURCE --> UTH
@@ -72,33 +41,17 @@ flowchart TD
   SOURCE --> DISPLAY
   SOURCE --> SEARCH
   SOURCE --> ANALYSIS
-  UTH --> DISPLAY
-  READ --> ANALYSIS
-```
-
-## Dependency rules
-
-- The module is plain Java and has no Quarkus, Andalus, model-provider, vector-store or persistence dependency.
-- Storage and corpus import implementations belong in adapters.
-- Arabic analysis consumes these contracts; it does not own or mutate source text.
-- Kallam remains responsible for evidence verification and scholarly review.
+\`\`\`
 
 ## Acceptance criteria
 
 - Invalid surah and ayah coordinates are rejected.
 - Blank edition identifiers are rejected.
 - Source text is retained exactly as imported.
-- Derived representations require a source representation reference.
+- Derived representations require source and transformation references.
 - Search/display transformations cannot replace source text.
-- Corpus access is expressed as a provider-neutral read port.
-- Tests cover representation and identity invariants.
+- Qira'at, riwayah and tariq are not conflated.
 
-## Deferred work
+## Deferred
 
-- Surah metadata and canonical verse-count validation.
-- Word/segment coordinates and edition-specific token alignment.
-- Qira'at, riwayah and transmission registry.
-- Verified Uthmani corpus import.
-- Orthographic mark inventory and Unicode conformance fixtures.
-- Textual collation and expert-reviewed variants.
-- Morphological and syntactic annotation corpora.
+Surah metadata, verified Uthmani corpus import, Unicode-versioned mark inventory, expert-reviewed variants, word-level alignment, tafsir registries and Asbab al-Nuzul registries.

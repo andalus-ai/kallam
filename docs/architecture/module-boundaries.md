@@ -1,26 +1,58 @@
 # Kallam Module Boundaries
 
-## Kallam owns
+Each source domain owns its concepts and evidence constraints. The Ijtihad layer coordinates research without absorbing those domains.
 
-- Scholarly research question decomposition.
-- Istinbāṭ state and protocol.
-- Evidence typing and provenance requirements.
-- Madhhab and Usul methodology selection.
-- Tarjih and comparative reasoning policy.
-- Scholar review, revision and research audit semantics.
+## Domain ownership
 
-## Andalus owns
+| Module | Owns |
+|---|---|
+| kallam-core | Shared research lifecycle, evidence provenance, planning and reports |
+| kallam-quran | Qur'anic text, surah/ayah references, editions, orthography, Qira'at, riwayah, tariq, tafsir and source provenance |
+| kallam-language-arabic | General Arabic text, morphology, syntax/Naḥw, I'rab, lexicon, semantics and Balaghah |
+| kallam-hadith | Hadith corpus, isnad, narrators/rijal, matn, takhrij, grading and hadith provenance |
+| kallam-usul | Usul al-Fiqh, ijma', ijma' al-Sahabah, qiyas, istihsan, istishab, maslahah, maqasid and qawa'id |
+| kallam-ijtihad | Research protocol, evidence orchestration, methodology profiles, comparative analysis and Tarjih |
+| Andalus integrations | Runtime, retrieval and agent adapters |
 
-- Agent execution lifecycle.
-- Inference/model routing.
-- Generic retrieval execution and vector infrastructure.
-- Generic tool execution, workflow and runtime operations.
-- Generic governance and runtime observability.
+## Collaboration model
 
-## Adapter contract
+\`\`\`mermaid
+flowchart TB
+  CORE["kallam-core<br/>Shared research primitives"]
+  Q["kallam-quran<br/>Qur'anic domain"]
+  H["kallam-hadith<br/>Hadith domain"]
+  AR["kallam-language-arabic<br/>Arabic linguistic domain"]
+  U["kallam-usul<br/>Usul and ijma'"]
+  I["kallam-ijtihad<br/>Research orchestration"]
+  AD["Andalus adapters"]
+  API["kallam_api<br/>Application runtime"]
 
-An adapter may translate an Andalus execution or retrieval result into a Kallam domain contract. It must not infer that a source is primary, authentic or authoritative from the name of the executing specialist, the retrieval query, or a requested filter alone.
+  I --> CORE
+  I --> U
+  I -. coordinates through ports .-> Q
+  I -. coordinates through ports .-> H
+  I -. coordinates through ports .-> AR
+  AD --> I
+  API --> I
+  API --> Q
+  API --> H
+  API --> AR
+  API --> U
+\`\`\`
 
-## Authority and provenance
+Dashed relationships are orchestration boundaries, not mandatory compile-time dependencies. Qur'anic, hadith, Arabic and usul modules remain independently usable. Avoid circular dependencies.
 
-Every evidence item should retain a stable source reference and an explicit verification state. AI-generated synthesis is not source evidence. Scholar annotations must be attributable and must not silently become authoritative corpus material.
+## Ijma' and Companion-consensus boundary
+
+An ijma' record is a research claim with explicit epistemic state. Kallam distinguishes a source reporting agreement, individual Companion positions, explicit versus tacit claims, evidence of dissent, the scope of a dissent search, methodology-specific assessment and scholar review.
+
+DISSENT_NOT_IDENTIFIED_WITHIN_SCOPE means only that no dissent was located in the declared scope. It is not proof that dissent never existed. VERIFIED_WITHIN_METHODOLOGY requires an explicit methodology profile and attributable scholar reviewer.
+
+## General rules
+
+1. Domain modules remain provider-independent and have no Quarkus, Andalus, database or model-vendor dependency.
+2. Source adapters preserve stable locators, edition/release identity and verification state.
+3. AI synthesis is not primary-source evidence.
+4. Retrieval scores do not authenticate sources.
+5. Methodology profiles are explicit and versioned.
+6. Final scholarly judgment remains with the qualified human scholar.

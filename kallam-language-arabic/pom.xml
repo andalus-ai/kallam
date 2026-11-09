@@ -4,8 +4,6 @@
   <parent><groupId>tech.kayys.kallam</groupId><artifactId>kallam-parent</artifactId><version>0.1.0-SNAPSHOT</version><relativePath>../pom.xml</relativePath></parent>
   <artifactId>kallam-language-arabic</artifactId>
   <name>Kallam Arabic Language Domain</name>
-  <description>Provider-independent Arabic and Qur'anic text domain contracts</description>
-  <dependencies>
-    <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency>
-  </dependencies>
+  <description>Provider-independent Arabic language and linguistic analysis contracts, independent of Qur'anic corpus concerns</description>
+  <dependencies><dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency></dependencies>
 </project>

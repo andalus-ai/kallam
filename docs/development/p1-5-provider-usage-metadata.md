@@ -43,3 +43,9 @@ Those source files and their old RAG test have been moved under:
 - `kallam-andalus-integration/src/legacy-test/java`
 
 They are retained as migration references but are not compiled or packaged. The active `kallam-andalus-integration` module now contains the lightweight inference adapter only. The legacy agent and RAG capabilities must be reimplemented against the current Andalus agent and RAG contracts in separate adapters before they are re-enabled. This avoids restoring the full harness dependency merely to satisfy stale imports.
+
+## Quarkus runtime composition
+
+The optional `kallam-quarkus-integration` module now includes Andalus's `andalus-inference-provider-bridge-quarkus`. At Quarkus startup, that module discovers CDI `InferenceProvider` beans and composes the single `InferenceRuntime` consumed by Kallam's analyzer producer.
+
+The bridge resolves provider identity from each provider's advertised `ModelInfo.provider()`; it rejects ambiguous or missing identities rather than guessing. If no concrete provider bean is installed, the runtime reports provider-unavailable and Kallam remains partial/fail-closed. A concrete provider plugin must therefore be packaged as a CDI bean in the application for model-backed research to run.

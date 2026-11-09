@@ -59,6 +59,23 @@ class AndalusInferenceResearchAnalyzerTest {
     }
 
     @Test
+    void carriesExplicitProviderSelectionIntoInferencePlan() {
+        AtomicReference<InferenceRequest> captured = new AtomicReference<>();
+        InferenceRuntime runtime = request -> {
+            captured.set(request);
+            return CompletableFuture.completedFuture(success(validJson(), 200, 100, 25));
+        };
+        var adapter = new AndalusInferenceResearchAnalyzer(runtime, "test-model",
+                Optional.of("test-provider"), new com.fasterxml.jackson.databind.ObjectMapper(),
+                Duration.ofSeconds(1));
+
+        var result = adapter.analyze(state(), METHODOLOGY, 80);
+
+        assertEquals(ResearchAnalysisResult.Status.COMPLETE, result.status());
+        assertEquals(Optional.of("test-provider"), captured.get().plan().providerId());
+    }
+
+    @Test
     void downgradesOutputWhenProviderDoesNotReportReasoningTokenUsage() {
         InferenceRuntime runtime = request -> CompletableFuture.completedFuture(
                 new InferenceResult(InferenceStatus.COMPLETED, validJson(),

@@ -38,6 +38,11 @@ class IjmaDomainTest {
                 CompanionConsensusAssessment.DissentSearchStatus.DISSENT_IDENTIFIED,
                 List.of(position(CompanionPosition.Position.AFFIRMS)), "methodology.example"));
     }
+    @Test void dissentCannotBePresentWhenSearchSaysItWasNotIdentified() {
+        assertThrows(IllegalArgumentException.class, () -> new CompanionConsensusAssessment("claim-1", "reviewed corpus",
+                CompanionConsensusAssessment.DissentSearchStatus.DISSENT_NOT_IDENTIFIED_WITHIN_SCOPE,
+                List.of(position(CompanionPosition.Position.OPPOSES)), "methodology.example"));
+    }
     @Test void dissentIsRecordedWithoutClaimingExhaustiveAbsence() {
         var assessment = new CompanionConsensusAssessment("claim-1", "named sources and date range",
                 CompanionConsensusAssessment.DissentSearchStatus.DISSENT_NOT_IDENTIFIED_WITHIN_SCOPE,

@@ -20,8 +20,11 @@ public record CompanionConsensusAssessment(String claimId, String searchScope,
             if (!claimId.equals(position.claimId()))
                 throw new IllegalArgumentException("all Companion positions must refer to this claim");
         }
-        if (dissentStatus == DissentSearchStatus.DISSENT_IDENTIFIED
-                && positions.stream().noneMatch(p -> p.position() == CompanionPosition.Position.OPPOSES))
+        boolean opposingPositionFound = positions.stream()
+                .anyMatch(p -> p.position() == CompanionPosition.Position.OPPOSES);
+        if (dissentStatus == DissentSearchStatus.DISSENT_IDENTIFIED && !opposingPositionFound)
             throw new IllegalArgumentException("identified dissent requires at least one opposing position");
+        if (dissentStatus == DissentSearchStatus.DISSENT_NOT_IDENTIFIED_WITHIN_SCOPE && opposingPositionFound)
+            throw new IllegalArgumentException("a located opposing position cannot be classified as dissent not identified");
     }
 }

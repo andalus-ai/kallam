@@ -13,7 +13,18 @@ public record ResearchReport(
         List<String> unresolved,
         ResearchCritique critique,
         String preliminarySynthesis,
-        boolean requiresScholarJudgment) {
+        boolean requiresScholarJudgment,
+        ResearchAnalysisResult structuredAnalysis) {
+
+    /** Backward-compatible constructor for report consumers. */
+    public ResearchReport(
+            String caseId, String question, String taswir, List<Evidence> evidence,
+            List<String> positions, List<String> analysis, List<String> objections,
+            List<String> unresolved, ResearchCritique critique, String preliminarySynthesis,
+            boolean requiresScholarJudgment) {
+        this(caseId, question, taswir, evidence, positions, analysis, objections,
+                unresolved, critique, preliminarySynthesis, requiresScholarJudgment, null);
+    }
 
     public ResearchReport {
         evidence = evidence == null ? List.of() : List.copyOf(evidence);

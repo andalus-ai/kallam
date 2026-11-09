@@ -71,8 +71,10 @@ The adapter waits only up to the configured timeout. On timeout or thread interr
 
 The API's existing `CoreDomainBeans` producer continues to supply `DefaultResearchAnalyzer` unless the build property `kallam.reasoning.enabled=true` is set.
 
-When the optional profile is built and reasoning is enabled, `AndalusResearchAnalyzerProducer` supplies the Andalus-backed `ResearchAnalyzer`. Startup fails clearly if:
-- no CDI `InferenceRuntime` bean is available;
+When the optional profile is built and reasoning is enabled, `AndalusResearchAnalyzerProducer` supplies the Andalus-backed `ResearchAnalyzer`. It uses one CDI `InferenceRuntime` bean when present. Otherwise it composes `DefaultInferenceRuntime` from CDI `InferenceProviderAdapter` beans that support the configured model. Startup fails clearly if:
+- multiple CDI `InferenceRuntime` beans are ambiguous;
+- no runtime bean and no compatible provider adapter are available;
+- multiple provider adapters support the model and no explicit provider ID was selected;
 - `kallam.reasoning.model-id` is blank; or
 - the configured timeout is not positive.
 
@@ -94,11 +96,12 @@ Example:
 ```bash
 KALLAM_REASONING_ENABLED=true \
 KALLAM_REASONING_MODEL_ID=<configured-model-id> \
+KALLAM_REASONING_PROVIDER_ID=<optional-provider-id> \
 KALLAM_REASONING_TIMEOUT=PT45S \
 mvn -Pandalus-runtime -s .mvn/settings.xml -B clean verify
 ```
 
-The application also needs a CDI-provided Andalus `InferenceRuntime` and its provider credentials/configuration. Kallam does not create credentials or choose a provider implicitly.
+A provider module must contribute CDI `InferenceProviderAdapter` beans or a single configured `InferenceRuntime` bean, together with provider credentials/configuration. When more than one provider supports the selected model, set `KALLAM_REASONING_PROVIDER_ID` to make routing deterministic. Kallam does not create credentials or choose a provider implicitly.
 
 ## CI verification
 

@@ -33,3 +33,13 @@ flowchart LR
 ## Scope
 
 The Andalus framework bridge and provider implementations own generic execution and provider-reported usage. Kallam only consumes the shared contract. This prevents the framework and provider plugins from depending on Kallam domain terminology.
+
+## Integration boundary cleanup
+
+The P1.4 optional build exposed older Andalus agent and RAG adapters in `kallam-andalus-integration` that import legacy packages (`tech.kayys.andalus.agent`, `tech.kayys.andalus.execution`, `tech.kayys.andalus.runtime`, and `tech.kayys.andalus.rag.core`) not present in the current `andalus-framework` API.
+
+Those source files and their old RAG test have been moved under:
+- `kallam-andalus-integration/src/legacy/java`
+- `kallam-andalus-integration/src/legacy-test/java`
+
+They are retained as migration references but are not compiled or packaged. The active `kallam-andalus-integration` module now contains the lightweight inference adapter only. The legacy agent and RAG capabilities must be reimplemented against the current Andalus agent and RAG contracts in separate adapters before they are re-enabled. This avoids restoring the full harness dependency merely to satisfy stale imports.

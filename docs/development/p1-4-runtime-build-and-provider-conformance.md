@@ -2,9 +2,9 @@
 
 ## Why this milestone exists
 
-P1.3 introduced an optional dependency on `tech.kayys.andalus:andalus-harness:0.0.1`. The default Kallam reactor passes, but the optional profile cannot resolve that artifact from Maven Central or the configured GitHub Packages repositories.
+P1.3 introduced an optional dependency on `tech.kayys.andalus:andalus-inference-api:0.0.1`. The default Kallam reactor passes, but the optional profile cannot resolve that artifact from Maven Central or the configured GitHub Packages repositories.
 
-The upstream source of truth is the public `andalus-ai/andalus-framework` repository. Its root Maven project is `andalus-framework-build:0.0.1`; the harness module is `framework/andalus-harness`. The dependency is currently not reliably published as a package consumable by Kallam CI.
+The upstream source of truth is the public `andalus-ai/andalus-framework` repository. Its root Maven project is `andalus-framework-build:0.0.1`; the harness module is `framework/andalus-inference-api`. The dependency is currently not reliably published as a package consumable by Kallam CI.
 
 Until publication is reliable, CI builds and installs the exact harness reactor dependency from source before verifying Kallam's optional profile. This tests the actual source API used by Kallam without committing binaries, vendoring source, or coupling Kallam's domain modules to the framework repository.
 

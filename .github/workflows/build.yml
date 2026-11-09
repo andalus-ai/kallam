@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           repository: andalus-ai/andalus-framework
-          ref: main
+          ref: codex/extract-inference-api-spi
           path: andalus-framework
           persist-credentials: false
       - name: Set up JDK 25
@@ -46,8 +46,8 @@ jobs:
           distribution: temurin
           java-version: "25"
           cache: maven
-      - name: Build and install the exact Andalus Harness reactor dependency
-        run: mvn -f andalus-framework/pom.xml -pl framework/andalus-harness -am -DskipTests -B -ntp install
+      - name: Build and install the lightweight Andalus inference API
+        run: mvn -f andalus-framework/pom.xml -pl framework/andalus-inference-api -am -DskipTests -B -ntp install
       - name: Verify optional Kallam Andalus and Quarkus integration profile
         env:
           GITHUB_ACTOR: ${{ github.actor }}

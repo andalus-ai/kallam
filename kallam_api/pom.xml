@@ -20,5 +20,5 @@
     <dependency><groupId>io.rest-assured</groupId><artifactId>rest-assured</artifactId><scope>test</scope></dependency>
   </dependencies>
   <build><plugins><plugin><groupId>io.quarkus</groupId><artifactId>quarkus-maven-plugin</artifactId><version>${quarkus.platform.version}</version><extensions>true</extensions><executions><execution><goals><goal>build</goal></goals></execution></executions></plugin></plugins></build>
-  <profiles><profile><id>andalus-runtime</id><dependencies><dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-andalus-integration</artifactId><version>${project.version}</version></dependency></dependencies></profile></profiles>
+  <profiles><profile><id>andalus-runtime</id><dependencies><dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-quarkus-integration</artifactId><version>${project.version}</version></dependency></dependencies></profile></profiles>
 </project>

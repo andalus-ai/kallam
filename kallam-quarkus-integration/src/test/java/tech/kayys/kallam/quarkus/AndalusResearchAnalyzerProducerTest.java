@@ -13,7 +13,9 @@ class AndalusResearchAnalyzerProducerTest {
         var method = AndalusResearchAnalyzerProducer.class.getMethod(
                 "configuredResearchAnalyzer",
                 jakarta.enterprise.inject.Instance.class,
+                jakarta.enterprise.inject.Instance.class,
                 com.fasterxml.jackson.databind.ObjectMapper.class,
+                String.class,
                 String.class,
                 java.time.Duration.class);
 

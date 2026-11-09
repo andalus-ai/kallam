@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           repository: andalus-ai/andalus-framework
-          ref: codex/extract-inference-api-spi
+          ref: d4bf0d6d2c4b11e5b778203a13e6b1c8d8fab895
           path: andalus-framework
           persist-credentials: false
       - name: Set up JDK 25
@@ -46,8 +46,8 @@ jobs:
           distribution: temurin
           java-version: "25"
           cache: maven
-      - name: Build and install the lightweight Andalus inference API
-        run: mvn -f andalus-framework/pom.xml -pl framework/andalus-inference-api -am -DskipTests -B -ntp install
+      - name: Build and install the Andalus inference provider bridge
+        run: mvn -f andalus-framework/pom.xml -pl framework/andalus-inference-provider-bridge-quarkus -am -B -ntp install
       - name: Verify optional Kallam Andalus and Quarkus integration profile
         env:
           GITHUB_ACTOR: ${{ github.actor }}

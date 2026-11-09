@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import tech.kayys.andalus.harness.inference.InferenceConstraints;
 import tech.kayys.andalus.harness.inference.InferenceInput;
+import tech.kayys.andalus.harness.inference.InferenceMetadata;
 import tech.kayys.andalus.harness.inference.InferencePlan;
 import tech.kayys.andalus.harness.inference.InferenceRequest;
 import tech.kayys.andalus.harness.inference.InferenceResult;
@@ -39,8 +40,8 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
 
     public static final String PROMPT_VERSION = "kallam-istinbat-analysis-v1";
     public static final String SCHEMA_VERSION = "kallam-research-analysis-v1";
-    public static final String REASONING_TOKENS_METADATA_KEY = "kallam.usage.reasoningTokens";
-    public static final String REASONING_BUDGET_ATTRIBUTE_KEY = "kallam.reasoningTokenBudget";
+    public static final String REASONING_TOKENS_METADATA_KEY = InferenceMetadata.REASONING_TOKENS;
+    public static final String REASONING_BUDGET_ATTRIBUTE_KEY = InferenceMetadata.REASONING_TOKEN_BUDGET;
     private static final int MAX_INPUT_TOKENS = 8192;
     private static final int MAX_OUTPUT_TOKENS = 4096;
     private static final Set<String> ROOT_FIELDS = Set.of(
@@ -312,6 +313,8 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
 
     private static int reportedReasoningTokens(InferenceResult result) {
         Object value = result.metadata().get(REASONING_TOKENS_METADATA_KEY);
+        // Read the pre-standardization key for compatibility with older provider adapters.
+        if (value == null) value = result.metadata().get("kallam.usage.reasoningTokens");
         if (!(value instanceof Number number)) return -1;
         long tokens = number.longValue();
         if (tokens < 0 || tokens > Integer.MAX_VALUE || number.doubleValue() != tokens) {

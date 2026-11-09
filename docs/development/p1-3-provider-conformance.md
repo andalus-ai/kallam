@@ -83,6 +83,7 @@ Configuration in `kallam_api/src/main/resources/application.properties`:
 ```properties
 kallam.reasoning.enabled=${KALLAM_REASONING_ENABLED:false}
 kallam.reasoning.model-id=${KALLAM_REASONING_MODEL_ID:}
+kallam.reasoning.provider-id=${KALLAM_REASONING_PROVIDER_ID:}
 kallam.reasoning.timeout=${KALLAM_REASONING_TIMEOUT:PT45S}
 ```
 

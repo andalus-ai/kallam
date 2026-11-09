@@ -46,9 +46,9 @@ sequenceDiagram
 
 ## Token accounting
 
-Andalus `InferenceUsage` reports input and output tokens. The adapter reads reasoning-token usage only from provider-supplied `InferenceResult.metadata.reasoningTokens`. It does not estimate reasoning usage from text length or relabel output tokens as reasoning tokens.
+Andalus `InferenceUsage` reports input and output tokens. The adapter reads reasoning-token usage only from provider-supplied `InferenceResult.metadata[AndalusInferenceResearchAnalyzer.REASONING_TOKENS_METADATA_KEY]` (`kallam.usage.reasoningTokens`). It does not estimate reasoning usage from text length or relabel output tokens as reasoning tokens.
 
-If the provider does not report reasoning-token usage, the adapter returns a `PARTIAL` result and does not accept the model's claims or arguments. If provider-reported reasoning usage exceeds the remaining Kallam budget, the output is rejected. The request also sets the remaining budget as the maximum generated-token allowance.
+If the provider does not report reasoning-token usage, the adapter returns a `PARTIAL` result and does not accept the model's claims or arguments. If provider-reported reasoning usage exceeds the remaining Kallam budget, the output is rejected. The remaining reasoning budget is carried as `kallam.reasoningTokenBudget` metadata/constraint attributes. It is distinct from the generated-output token limit; provider adapters must map it to native reasoning controls when supported, and Kallam validates the reported usage after execution.
 
 A future provider adapter may map native reasoning-token metadata into this contract. Until then, providers without that metadata cannot produce a complete Kallam analysis through this adapter.
 
@@ -64,7 +64,7 @@ A future provider adapter may map native reasoning-token metadata into this cont
 
 The adapter lives in the optional `kallam-andalus-integration` Maven module, activated through the root `andalus-runtime` profile. The default Kallam reactor and domain core do not depend on Andalus or Jackson.
 
-Applications explicitly configure an `InferenceRuntime`, model ID, and adapter instance, then inject the adapter as `ResearchAnalyzer`. The adapter does not create a global runtime, select a provider, or embed credentials.
+Applications explicitly configure an `InferenceRuntime`, model ID, and adapter instance, then inject the adapter as `ResearchAnalyzer`. The Quarkus-specific producer is added in P1.3; the adapter itself does not create a global runtime, select a provider, or embed credentials.
 
 ## Next validation work
 

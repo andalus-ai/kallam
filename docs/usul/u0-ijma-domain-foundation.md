@@ -12,7 +12,7 @@ kallam-usul owns legal-theory concepts. kallam-quran, kallam-hadith and kallam-l
 
 ## Initial contracts
 
-- IjmaClaim: proposition under investigation, classification, methodology profile, evidence and epistemic state.
+- IjmaClaim: proposition under investigation, explicit population scope, classification, methodology profile, evidence and epistemic state.
 - IjmaEvidenceReference: stable source identifier and locator, evidentiary role, verification state and reviewer attribution.
 - CompanionId: stable reference to a curated Companion authority catalogue.
 - CompanionPosition: a sourced position attributed to an individual Companion.
@@ -27,7 +27,7 @@ kallam-usul owns legal-theory concepts. kallam-quran, kallam-hadith and kallam-l
 5. VERIFIED_WITHIN_METHODOLOGY requires a methodology profile and attributable scholar reviewer.
 6. This foundation ships contracts and tests, not fabricated Companion positions or consensus claims.
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
   CLAIM["Ijma' claim proposed"] --> CLASSIFY["Classify type and scope"]
   CLASSIFY --> SOURCES["Locate reports and individual positions"]
@@ -37,7 +37,7 @@ flowchart TD
   METHOD --> REVIEW["Qualified scholar review"]
   REVIEW --> STATE["Record methodology-specific assessment"]
   STATE --> REPORT["Expose evidence, uncertainty and unresolved issues"]
-\`\`\`
+```
 
 ## Future extensions
 

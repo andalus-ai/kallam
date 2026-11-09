@@ -24,7 +24,7 @@ Qira'at is not inferred from spelling, model output or normalized text. Reading 
 
 Corpus imports record provider, edition/release, stable source locator, declared license and redistribution constraints, import batch, transformation history, verification status and reviewer attribution where available. No Qur'anic dataset is bundled or declared verified by this foundation.
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
   CORPUS["Edition-aware Qur'an corpus"]
   REF["Canonical verse reference"]
@@ -41,7 +41,7 @@ flowchart TD
   SOURCE --> DISPLAY
   SOURCE --> SEARCH
   SOURCE --> ANALYSIS
-\`\`\`
+```
 
 ## Acceptance criteria
 

@@ -25,7 +25,7 @@ Attestation states remain distinct:
 
 A parser, search result or model prediction must never promote a declaration to source-attested or scholar-reviewed. Text spelling or Unicode code points must never be used to infer Qira'at or riwayah identity.
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
   Q["Qira'at identity"] --> R["Riwayah identity"]
   R --> T["Optional Tariq route"]
@@ -39,15 +39,11 @@ flowchart TD
   ATT --> VAR
   VAR --> REVIEW["Source verification and scholarly review"]
   VAR --> CONSUMER["Comparison / analysis consumers"]
-\`\`\`
+```
 
 ## Dependency boundaries
 
-- Definitions, identifiers, variants, attestation values and registry ports live in the independent kallam-quran module.
-- General Arabic linguistic analysis lives in kallam-language-arabic and consumes source-aware Qur'anic contracts through explicit integration ports.
-- Persistence, curated reading datasets, source verification and scholarly review workflows belong in adapters/application services.
-- Registries validate that each riwayah belongs to the declared Qira'at and each tariq belongs to the declared riwayah.
-- No Quarkus, Andalus, model provider, database or corpus dependency is introduced.
+Definitions, identifiers, variants, attestation values and registry ports live in the independent kallam-quran module. General Arabic linguistic analysis lives in kallam-language-arabic and consumes source-aware Qur'anic contracts through explicit integration ports. Persistence, curated reading datasets, source verification and scholarly review workflows belong in adapters/application services.
 
 ## Acceptance criteria
 

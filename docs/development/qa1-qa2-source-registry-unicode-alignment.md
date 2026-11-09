@@ -21,7 +21,7 @@ Technical import validation is distinct from source verification and scholarly r
 
 The model does not hard-code a supposedly complete list of Uthmani marks. Later fixtures require a named Unicode version and identified, expert-reviewed edition. NFC/NFD is not a substitute for Qur'anic orthographic validation.
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
   SRC["Named source and edition"] --> DESC["Corpus source descriptor"]
   DESC --> IMP["Immutable import batch + SHA-256"]
@@ -33,7 +33,7 @@ flowchart TD
   RAW --> ALIGN["Code-point span alignment"]
   PROJ --> ALIGN
   ALIGN --> CONSUMER["Search, rendering and analysis consumers"]
-\`\`\`
+```
 
 ## Dependency boundaries
 

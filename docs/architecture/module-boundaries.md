@@ -16,7 +16,7 @@ Each source domain owns its concepts and evidence constraints. The Ijtihad layer
 
 ## Collaboration model
 
-\`\`\`mermaid
+```mermaid
 flowchart TB
   CORE["kallam-core<br/>Shared research primitives"]
   Q["kallam-quran<br/>Qur'anic domain"]
@@ -38,7 +38,7 @@ flowchart TB
   API --> H
   API --> AR
   API --> U
-\`\`\`
+```
 
 Dashed relationships are orchestration boundaries, not mandatory compile-time dependencies. Qur'anic, hadith, Arabic and usul modules remain independently usable. Avoid circular dependencies.
 

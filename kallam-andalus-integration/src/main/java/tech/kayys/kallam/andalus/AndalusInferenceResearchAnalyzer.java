@@ -19,13 +19,14 @@ import tech.kayys.kallam.istinbat.ResearchTokenUsage;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Optional adapter from Kallam's scholarly-analysis port to the Andalus inference runtime.
@@ -38,7 +39,10 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
 
     public static final String PROMPT_VERSION = "kallam-istinbat-analysis-v1";
     public static final String SCHEMA_VERSION = "kallam-research-analysis-v1";
+    public static final String REASONING_TOKENS_METADATA_KEY = "kallam.usage.reasoningTokens";
+    public static final String REASONING_BUDGET_ATTRIBUTE_KEY = "kallam.reasoningTokenBudget";
     private static final int MAX_INPUT_TOKENS = 8192;
+    private static final int MAX_OUTPUT_TOKENS = 4096;
     private static final Set<String> ROOT_FIELDS = Set.of(
             "schemaVersion", "methodologyId", "methodologyVersion", "status", "claims", "arguments",
             "conflicts", "positions", "usulFindings", "unresolvedQuestions", "uncertaintyNotes");
@@ -73,17 +77,30 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
                     "No reasoning-token budget remains; inference was not invoked.");
         }
 
+        CompletableFuture<InferenceResult> execution;
+        try {
+            execution = runtime.execute(request(state, methodology, remainingReasoningTokens)).toCompletableFuture();
+        } catch (RuntimeException invocationFailure) {
+            return partial(methodology, ResearchTokenUsage.none(),
+                    "Andalus inference could not be started; no model analysis was accepted ("
+                            + invocationFailure.getClass().getSimpleName() + ").");
+        }
+
         InferenceResult inference;
         try {
-            inference = runtime.execute(request(state, methodology, remainingReasoningTokens))
-                    .toCompletableFuture().get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+            inference = execution.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+        } catch (TimeoutException timedOut) {
+            execution.cancel(true);
+            return partial(methodology, ResearchTokenUsage.none(),
+                    "Andalus inference exceeded the configured timeout; cancellation was requested.");
         } catch (InterruptedException interrupted) {
+            execution.cancel(true);
             Thread.currentThread().interrupt();
             return partial(methodology, ResearchTokenUsage.none(),
-                    "Andalus inference was interrupted; no model analysis was accepted.");
+                    "Andalus inference was interrupted; cancellation was requested and no model analysis was accepted.");
         } catch (Exception failure) {
             return partial(methodology, ResearchTokenUsage.none(),
-                    "Andalus inference failed or timed out; no model analysis was accepted ("
+                    "Andalus inference failed; no model analysis was accepted ("
                             + failure.getClass().getSimpleName() + ").");
         }
 
@@ -96,11 +113,12 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
         int reportedReasoningTokens;
         ResearchTokenUsage usage;
         try {
+            requireProviderIdentity(inference);
             reportedReasoningTokens = reportedReasoningTokens(inference);
             usage = usage(inference, Math.max(0, reportedReasoningTokens));
         } catch (RuntimeException invalidUsage) {
             return partial(methodology, ResearchTokenUsage.none(),
-                    "Andalus returned invalid provider token-usage metadata; output was rejected.");
+                    "Andalus provider identity or token-usage metadata was missing or invalid; output was rejected.");
         }
         if (reportedReasoningTokens < 0) {
             return partial(methodology, usage,
@@ -154,11 +172,11 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
 
         InferenceConstraints constraints = new InferenceConstraints(
                 MAX_INPUT_TOKENS,
-                remainingReasoningTokens,
-                (long) MAX_INPUT_TOKENS + remainingReasoningTokens,
+                MAX_OUTPUT_TOKENS,
+                (long) MAX_INPUT_TOKENS + MAX_OUTPUT_TOKENS,
                 timeout.toMillis(),
                 Optional.empty(),
-                Map.of("kallam.reasoningTokenBudget", remainingReasoningTokens));
+                Map.of(REASONING_BUDGET_ATTRIBUTE_KEY, remainingReasoningTokens));
         InferencePlan plan = new InferencePlan(
                 java.util.UUID.randomUUID().toString(),
                 "kallam.istinbat.structured-analysis",
@@ -169,7 +187,8 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
                 "DIRECT",
                 Map.of("kallam.prompt.version", PROMPT_VERSION,
                         "kallam.schema.version", SCHEMA_VERSION,
-                        "kallam.case.id", state.caseId()));
+                        "kallam.case.id", state.caseId(),
+                        REASONING_BUDGET_ATTRIBUTE_KEY, remainingReasoningTokens));
         return new InferenceRequest(plan, InferenceInput.of(payload));
     }
 
@@ -272,8 +291,15 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
         return new ResearchTokenUsage(input, output, reasoningTokens);
     }
 
+    private static void requireProviderIdentity(InferenceResult result) {
+        if (result.modelId().isEmpty() || result.modelId().get().isBlank()
+                || result.providerId().isEmpty() || result.providerId().get().isBlank()) {
+            throw new IllegalArgumentException("provider and model identity are required");
+        }
+    }
+
     private static int reportedReasoningTokens(InferenceResult result) {
-        Object value = result.metadata().get("reasoningTokens");
+        Object value = result.metadata().get(REASONING_TOKENS_METADATA_KEY);
         if (!(value instanceof Number number)) return -1;
         long tokens = number.longValue();
         if (tokens < 0 || tokens > Integer.MAX_VALUE || number.doubleValue() != tokens) {

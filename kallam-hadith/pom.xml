@@ -6,6 +6,7 @@
   <name>Kallam Hadith Domain</name>
   <description>Framework-independent Hadith domain model and corpus/search ports</description>
   <dependencies>
+    <dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-language-arabic</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency>
   </dependencies>
 </project>

@@ -3,6 +3,7 @@ package tech.kayys.kallam.hadith.search;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import tech.kayys.kallam.language.arabic.ArabicTextNormalizer;
 import tech.kayys.kallam.hadith.domain.HadithOccurrence;
 import tech.kayys.kallam.hadith.domain.OccurrenceId;
 import tech.kayys.kallam.hadith.port.HadithSearch;

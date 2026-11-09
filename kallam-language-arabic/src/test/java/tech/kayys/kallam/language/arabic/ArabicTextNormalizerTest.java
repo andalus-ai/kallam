@@ -1,4 +1,4 @@
-package tech.kayys.kallam.hadith.search;
+package tech.kayys.kallam.language.arabic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;

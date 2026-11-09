@@ -21,6 +21,8 @@ Kallam is a scholarly research product for structured Fiqh research and Istinbā
 4. Retrieval metadata must not be promoted to verified provenance without independent validation.
 5. A scholar remains responsible for review and final determination.
 6. AI-generated analysis, published interpretation, primary-source material and scholar annotations must remain distinguishable.
+7. Arabic source text is immutable; normalized search/display text is a separately identified projection.
+8. Qur'anic edition, orthographic representation and reading identity must not be conflated.
 
 See docs/development/p0-build-foundation.md and docs/architecture/module-boundaries.md. Hadith boundaries are documented in docs/hadith/h0-domain-foundation.md, docs/hadith/h1-corpus-ingestion.md and docs/hadith/h2-search-index.md.
 
@@ -38,7 +40,7 @@ To build the default application reactor (without the separately published Andal
 
 To build only the framework-independent domain and methodology modules:
 
-    mvn -pl kallam-core,kallam_ijtihad,kallam-hadith -am -B -ntp clean verify
+    mvn -pl kallam-core,kallam_ijtihad,kallam-hadith,kallam-language-arabic -am -B -ntp clean verify
 
 To include the external Andalus runtime adapters:
 

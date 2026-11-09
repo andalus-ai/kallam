@@ -106,7 +106,7 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
 
         if (inference == null || !inference.isSuccess()) {
             String status = inference == null ? "no result" : inference.status().name();
-            return partial(methodology, usage(inference, 0),
+            return partial(methodology, ResearchTokenUsage.none(),
                     "Andalus inference did not complete successfully (" + status + ").");
         }
 

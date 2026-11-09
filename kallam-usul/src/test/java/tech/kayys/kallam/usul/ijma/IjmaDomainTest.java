@@ -13,10 +13,20 @@ class IjmaDomainTest {
         return new CompanionPosition("claim-1", new CompanionId("companion.example"),
                 "Reported position", stance, List.of(evidence()));
     }
+    @Test void companionConsensusHasAnExplicitScope() {
+        var claim = new IjmaClaim("claim-1", "Issue", "Proposition", IjmaScope.COMPANIONS_ONLY,
+                IjmaType.SARIH, IjmaAssessmentStatus.REPORTED, "methodology.example", List.of(evidence()), null);
+        assertEquals(IjmaScope.COMPANIONS_ONLY, claim.scope());
+    }
     @Test void methodologyVerifiedClaimRequiresProfileAndReviewer() {
         assertThrows(IllegalArgumentException.class, () -> new IjmaClaim("claim-1", "Issue", "Proposition",
-                IjmaType.SARIH, IjmaAssessmentStatus.VERIFIED_WITHIN_METHODOLOGY,
+                IjmaScope.COMPANIONS_ONLY, IjmaType.SARIH, IjmaAssessmentStatus.VERIFIED_WITHIN_METHODOLOGY,
                 null, List.of(evidence()), null));
+    }
+    @Test void reportedClaimRequiresEvidence() {
+        assertThrows(IllegalArgumentException.class, () -> new IjmaClaim("claim-1", "Issue", "Proposition",
+                IjmaScope.COMPANIONS_ONLY, IjmaType.REPORTED, IjmaAssessmentStatus.REPORTED,
+                "methodology.example", List.of(), null));
     }
     @Test void dissentSearchMustDeclareItsScope() {
         assertThrows(IllegalArgumentException.class, () -> new CompanionConsensusAssessment("claim-1", null,

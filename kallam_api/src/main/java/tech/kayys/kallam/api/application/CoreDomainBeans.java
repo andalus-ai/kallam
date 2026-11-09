@@ -3,6 +3,7 @@ package tech.kayys.kallam.api.application;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.Produces;
+import io.quarkus.arc.properties.UnlessBuildProperty;
 import java.util.List;
 import tech.kayys.kallam.istinbat.BasicResearchCritic;
 import tech.kayys.kallam.istinbat.DefaultResearchAnalyzer;
@@ -37,11 +38,11 @@ public class CoreDomainBeans {
 
     @Produces
     @ApplicationScoped
+    @UnlessBuildProperty(name = "kallam.reasoning.enabled", stringValue = "true")
     public ResearchAnalyzer researchAnalyzer() {
-        // DefaultResearchAnalyzer is a passthrough in kallam-core v0.1 - the
-        // real analysis step is expected to come from a reasoning-model
-        // adapter in the runtime layer (see kallam-core's javadoc on the
-        // class). Swap this producer once that adapter exists.
+        // Keep the safe no-model implementation as the default. When the
+        // optional Andalus runtime profile is built and reasoning is enabled,
+        // its conditional producer supplies the model-backed implementation.
         return new DefaultResearchAnalyzer();
     }
 

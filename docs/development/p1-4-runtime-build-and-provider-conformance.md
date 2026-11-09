@@ -38,6 +38,8 @@ mvn -Pandalus-runtime -s .mvn/settings.xml -B -ntp clean verify
 
 The first command uses Maven's reactor dependency graph (`-am`) to build the harness and its required framework modules. `-DskipTests` still compiles production code and test sources; it skips executing the framework's tests in this focused dependency build. Kallam's own optional integration tests execute in the second command.
 
+The first source-build attempt exposed a second dependency-publication gap: `andalus-embedding`, which is pulled in by `andalus-knowledge` and then by `andalus-harness`, depends on unpublished Gamelan snapshot artifacts (`gamelan-plugin-spi`, `gamelan-sdk-executor-core`) and Aqli snapshot artifacts (`aqli-sdk`, `aqli-sdk-core`, `aqli-spi-inference`). The source-build job currently fails before it reaches the harness module. Checking out only `andalus-framework` is therefore insufficient; the upstream build must either publish these dependencies or the harness/inference contracts must be split into a smaller module without the knowledge/embedding stack.
+
 ## Provider conformance boundary
 
 This milestone does not invent a production provider implementation inside Kallam. The responsibilities remain:
@@ -46,7 +48,7 @@ This milestone does not invent a production provider implementation inside Kalla
 - Kallam owns scholarly prompt construction, schema validation, evidence-reference validation, methodology alignment, and the scholar-review boundary.
 - Kallam accepts reasoning-token usage only from the explicit `kallam.usage.reasoningTokens` metadata contract. Missing or invalid usage yields a partial analysis, not a fabricated accounting value.
 
-The current Andalus framework exposes `InferenceProviderAdapter` as an SPI, but repository inspection did not find a concrete implementation of that SPI in the framework. Existing provider implementations in the separate Andalus runtime use a different provider interface. A future provider bridge should be implemented and tested in the Andalus provider/runtime repository, rather than leaking provider-specific transport into Kallam core.
+The current Andalus framework exposes `InferenceProviderAdapter` as an SPI, but repository inspection did not find a concrete implementation of that SPI in the framework. Existing provider implementations in the separate Andalus runtime use a different provider interface. A future provider bridge should be implemented and tested in the Andalus provider/runtime repository, rather than leaking provider-specific transport into Kallam core. The current source-build CI is intentionally left failing rather than masking this dependency gap with `continue-on-error`.
 
 ## Publication follow-up
 

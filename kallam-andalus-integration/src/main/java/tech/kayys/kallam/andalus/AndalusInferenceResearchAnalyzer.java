@@ -49,17 +49,29 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
 
     private final InferenceRuntime runtime;
     private final String modelId;
+    private final Optional<String> providerId;
     private final ObjectMapper mapper;
     private final Duration timeout;
 
     public AndalusInferenceResearchAnalyzer(InferenceRuntime runtime, String modelId) {
-        this(runtime, modelId, new ObjectMapper(), Duration.ofSeconds(45));
+        this(runtime, modelId, Optional.empty(), new ObjectMapper(), Duration.ofSeconds(45));
     }
 
     public AndalusInferenceResearchAnalyzer(
             InferenceRuntime runtime, String modelId, ObjectMapper mapper, Duration timeout) {
+        this(runtime, modelId, Optional.empty(), mapper, timeout);
+    }
+
+    public AndalusInferenceResearchAnalyzer(
+            InferenceRuntime runtime,
+            String modelId,
+            Optional<String> providerId,
+            ObjectMapper mapper,
+            Duration timeout) {
         this.runtime = java.util.Objects.requireNonNull(runtime, "runtime");
         this.modelId = requireText(modelId, "modelId");
+        this.providerId = providerId == null ? Optional.empty() : providerId
+                .map(value -> requireText(value, "providerId"));
         this.mapper = java.util.Objects.requireNonNull(mapper, "mapper");
         this.timeout = java.util.Objects.requireNonNull(timeout, "timeout");
         if (timeout.isZero() || timeout.isNegative()) {
@@ -181,7 +193,7 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
                 java.util.UUID.randomUUID().toString(),
                 "kallam.istinbat.structured-analysis",
                 modelId,
-                Optional.empty(),
+                providerId,
                 Set.of("text-generation", "structured-json"),
                 constraints,
                 "DIRECT",

@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           repository: andalus-ai/andalus-framework
-          ref: codex/extract-inference-api-spi
+          ref: d4bf0d6d2c4b11e5b778203a13e6b1c8d8fab895
           path: andalus-framework
           persist-credentials: false
       - name: Set up JDK 25

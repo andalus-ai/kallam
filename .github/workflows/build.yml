@@ -31,15 +31,24 @@ jobs:
   verify-andalus-runtime:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Kallam
         uses: actions/checkout@v5
+      - name: Checkout Andalus Framework source
+        uses: actions/checkout@v5
+        with:
+          repository: andalus-ai/andalus-framework
+          ref: main
+          path: andalus-framework
+          persist-credentials: false
       - name: Set up JDK 25
         uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "25"
           cache: maven
-      - name: Verify optional Andalus and Quarkus integration profile
+      - name: Build and install the exact Andalus Harness reactor dependency
+        run: mvn -f andalus-framework/pom.xml -pl framework/andalus-harness -am -DskipTests -B -ntp install
+      - name: Verify optional Kallam Andalus and Quarkus integration profile
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GH_PACKAGES_READ_TOKEN: ${{ secrets.GH_PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}

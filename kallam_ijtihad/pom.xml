@@ -3,9 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
   <parent><groupId>tech.kayys.kallam</groupId><artifactId>kallam-parent</artifactId><version>0.1.0-SNAPSHOT</version><relativePath>../pom.xml</relativePath></parent>
   <artifactId>kallam-ijtihad</artifactId><name>Kallam Ijtihad Methodology</name>
-  <description>Methodology, expert contracts, evidence tiers and Tarjih adjudication</description>
+  <description>Research orchestration, methodology profiles, comparative reasoning and Tarjih</description>
   <dependencies>
     <dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-core</artifactId><version>${project.version}</version></dependency>
+    <dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-usul</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency>
   </dependencies>
 </project>

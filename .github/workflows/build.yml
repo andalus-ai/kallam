@@ -27,3 +27,29 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           GH_PACKAGES_READ_TOKEN: ${{ secrets.GH_PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
         run: mvn -s .mvn/settings.xml -B -ntp clean verify
+
+  verify-andalus-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Kallam
+        uses: actions/checkout@v5
+      - name: Checkout Andalus Framework source
+        uses: actions/checkout@v5
+        with:
+          repository: andalus-ai/andalus-framework
+          ref: codex/extract-inference-api-spi
+          path: andalus-framework
+          persist-credentials: false
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+      - name: Build and install the lightweight Andalus inference API
+        run: mvn -f andalus-framework/pom.xml -pl framework/andalus-inference-api -am -DskipTests -B -ntp install
+      - name: Verify optional Kallam Andalus and Quarkus integration profile
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GH_PACKAGES_READ_TOKEN: ${{ secrets.GH_PACKAGES_READ_TOKEN || secrets.GITHUB_TOKEN }}
+        run: mvn -Pandalus-runtime -s .mvn/settings.xml -B -ntp clean verify

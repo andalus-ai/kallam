@@ -21,6 +21,7 @@ import tech.kayys.kallam.istinbat.SourceReference;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -49,11 +50,29 @@ class AndalusInferenceResearchAnalyzerTest {
         assertEquals(200, result.tokenUsage().inputTokens());
         assertEquals(100, result.tokenUsage().outputTokens());
         assertEquals(25, result.tokenUsage().reasoningTokens());
-        assertEquals(80, captured.get().plan().constraints().maxOutputTokens());
+        assertEquals(4096, captured.get().plan().constraints().maxOutputTokens());
+        assertEquals(80, captured.get().plan().constraints().attributes().get("kallam.reasoningTokenBudget"));
         assertEquals(8192, captured.get().plan().constraints().maxInputTokens());
         assertEquals("kallam.istinbat.structured-analysis", captured.get().plan().requirementId());
         assertTrue(captured.get().plan().metadata().containsKey("kallam.schema.version"));
         assertInstanceOf(Map.class, captured.get().input().content());
+    }
+
+    @Test
+    void carriesExplicitProviderSelectionIntoInferencePlan() {
+        AtomicReference<InferenceRequest> captured = new AtomicReference<>();
+        InferenceRuntime runtime = request -> {
+            captured.set(request);
+            return CompletableFuture.completedFuture(success(validJson(), 200, 100, 25));
+        };
+        var adapter = new AndalusInferenceResearchAnalyzer(runtime, "test-model",
+                Optional.of("test-provider"), new com.fasterxml.jackson.databind.ObjectMapper(),
+                Duration.ofSeconds(1));
+
+        var result = adapter.analyze(state(), METHODOLOGY, 80);
+
+        assertEquals(ResearchAnalysisResult.Status.COMPLETE, result.status());
+        assertEquals(Optional.of("test-provider"), captured.get().plan().providerId());
     }
 
     @Test
@@ -133,6 +152,33 @@ class AndalusInferenceResearchAnalyzerTest {
         assertEquals(ResearchAnalysisResult.Status.PARTIAL, result.status());
     }
 
+    @Test
+    void rejectsCompletedResponsesWithoutProviderIdentity() {
+        InferenceRuntime runtime = request -> CompletableFuture.completedFuture(
+                new InferenceResult(InferenceStatus.COMPLETED, validJson(),
+                        InferenceUsage.of(100, 50), Optional.of("test-model"),
+                        Optional.empty(), Map.of(AndalusInferenceResearchAnalyzer.REASONING_TOKENS_METADATA_KEY, 10)));
+
+        var result = analyzer(runtime).analyze(state(), METHODOLOGY, 80);
+
+        assertEquals(ResearchAnalysisResult.Status.PARTIAL, result.status());
+        assertTrue(result.claims().isEmpty());
+        assertTrue(result.uncertaintyNotes().getFirst().contains("provider identity"));
+    }
+
+    @Test
+    void cancelsInferenceWhenConfiguredTimeoutExpires() {
+        CompletableFuture<InferenceResult> pending = new CompletableFuture<>();
+        InferenceRuntime runtime = request -> pending;
+        var adapter = new AndalusInferenceResearchAnalyzer(runtime, "test-model",
+                new com.fasterxml.jackson.databind.ObjectMapper(), Duration.ofMillis(1));
+
+        var result = adapter.analyze(state(), METHODOLOGY, 80);
+
+        assertEquals(ResearchAnalysisResult.Status.PARTIAL, result.status());
+        assertTrue(pending.isCancelled());
+        assertTrue(result.uncertaintyNotes().getFirst().contains("cancellation was requested"));
+    }
     private static AndalusInferenceResearchAnalyzer analyzer(InferenceRuntime runtime) {
         return new AndalusInferenceResearchAnalyzer(runtime, "test-model");
     }
@@ -140,7 +186,7 @@ class AndalusInferenceResearchAnalyzerTest {
     private static InferenceResult success(String output, long input, long generated, int reasoning) {
         return new InferenceResult(InferenceStatus.COMPLETED, output,
                 InferenceUsage.of(input, generated), Optional.of("test-model"),
-                Optional.of("test-provider"), Map.of("reasoningTokens", reasoning));
+                Optional.of("test-provider"), Map.of(AndalusInferenceResearchAnalyzer.REASONING_TOKENS_METADATA_KEY, reasoning));
     }
 
     private static ResearchState state() {

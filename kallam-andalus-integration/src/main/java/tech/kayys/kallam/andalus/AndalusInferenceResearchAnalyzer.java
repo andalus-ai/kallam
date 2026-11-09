@@ -202,7 +202,7 @@ public final class AndalusInferenceResearchAnalyzer implements ResearchAnalyzer 
                         "kallam.schema.version", SCHEMA_VERSION,
                         "kallam.case.id", state.caseId(),
                         REASONING_BUDGET_ATTRIBUTE_KEY, remainingReasoningTokens));
-        return new InferenceRequest(plan, InferenceInput.of(payload));
+        return InferenceRequest.of(plan, InferenceInput.of(payload));
     }
 
     private Map<String, Object> evidencePayload(tech.kayys.kallam.istinbat.Evidence evidence) {

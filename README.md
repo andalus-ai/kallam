@@ -8,7 +8,7 @@ Kallam is a scholarly research product for structured Fiqh research and Istinbā
 |---|---|
 | kallam-core | Framework-independent research domain, evidence provenance, planning and reports |
 | kallam-quran | Qur'anic text, editions, orthography, Qira'at, riwayah and source provenance |
-| kallam-hadith | Hadith collections, isnad, rijal, source-aware Matn comparison, takhrij, grading and discovery |
+| kallam-hadith | Hadith collections, source-aware Matn comparison, Isnad and Rijal research, takhrij, grading and discovery |
 | kallam-language-arabic | General Arabic language and reusable linguistic analysis contracts |
 | kallam-usul | Usul al-Fiqh, ijma', ijma' al-Sahabah, qiyas and legal-methodology contracts |
 | kallam-ijtihad (directory: kallam_ijtihad) | Research orchestration, methodology profiles, comparative reasoning and Tarjih |

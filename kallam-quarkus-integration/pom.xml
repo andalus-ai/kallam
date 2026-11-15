@@ -7,6 +7,7 @@
   <description>Quarkus CDI and configuration wiring for the optional Andalus inference adapter</description>
   <dependencies>
     <dependency><groupId>tech.kayys.kallam</groupId><artifactId>kallam-andalus-integration</artifactId><version>${project.version}</version></dependency>
+    <dependency><groupId>tech.kayys.andalus</groupId><artifactId>andalus-inference-provider-bridge-quarkus</artifactId><version>${andalus.version}</version></dependency>
     <dependency><groupId>io.quarkus</groupId><artifactId>quarkus-arc</artifactId></dependency>
     <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency>
   </dependencies>

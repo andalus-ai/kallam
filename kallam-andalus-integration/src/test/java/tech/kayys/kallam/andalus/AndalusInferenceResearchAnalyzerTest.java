@@ -51,7 +51,7 @@ class AndalusInferenceResearchAnalyzerTest {
         assertEquals(100, result.tokenUsage().outputTokens());
         assertEquals(25, result.tokenUsage().reasoningTokens());
         assertEquals(4096, captured.get().plan().constraints().maxOutputTokens());
-        assertEquals(80, captured.get().plan().constraints().attributes().get("kallam.reasoningTokenBudget"));
+        assertEquals(80, captured.get().plan().constraints().attributes().get(AndalusInferenceResearchAnalyzer.REASONING_BUDGET_ATTRIBUTE_KEY));
         assertEquals(8192, captured.get().plan().constraints().maxInputTokens());
         assertEquals("kallam.istinbat.structured-analysis", captured.get().plan().requirementId());
         assertTrue(captured.get().plan().metadata().containsKey("kallam.schema.version"));
